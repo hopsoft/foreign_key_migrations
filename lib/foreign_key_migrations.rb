@@ -8,7 +8,7 @@ module ActiveRecord
       # ===Params
       # * table_name - the name of the database table being altered
       # * foreign_key - name of foreign key column or an array of fk column names
-      # * references - name of primary key column or an array of pk column names
+      # * references - name of the table that the foreign key references
       # * options - hash of additional options accepted options: * :name - name of
       #   constraint * :on_update - referential action to take (CASCADE, RESTRICT, NO
       #   ACTION, SET NULL, SET DEFAULT) * :on_delete - referential action to take
@@ -48,7 +48,7 @@ module ActiveRecord
       # ===Params
       # * table_name - the name of the database table being altered
       # * foreign_key - name of foreign key column or an array of fk column names
-      # * references - name of primary key column or an array of pk column names
+      # * references - name of the table that the foreign key references
       # * options - hash of additional options accepted options: * :name - name of
       #   constraint * :on_update - referential action to take (CASCADE, RESTRICT, NO
       #   ACTION, SET NULL, SET DEFAULT) * :on_delete - referential action to take
