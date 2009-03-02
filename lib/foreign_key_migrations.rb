@@ -21,16 +21,16 @@ module ActiveRecord
         foreign_key.collect! {|x| x.to_s } if foreign_key.is_a?(Array)
         references.collect! {|x| x.to_s } if references.is_a?(Array)
 
-        constraint_name = get_constraint_name(table_name, foreign_key, references, options)
         query = "ALTER TABLE [#{table_name}] "
-        query << "ADD CONSTRAINT #{constraint_name} "
-        query << "FOREIGN KEY "
+        constraint_name = get_constraint_name(table_name, foreign_key, references, options)
+        query << "ADD CONSTRAINT [#{constraint_name}] "
+        query << "FOREIGN KEY ("
         if foreign_key.is_a?(Array)
           query << "[#{foreign_key.join("],[")}] "
         else
           query << "[#{foreign_key}] "
         end
-        query << "REFERENCES "
+        query << ") REFERENCES "
         if references.is_a?(Array)
           query << "[#{references.join("],[")}] "
         else
