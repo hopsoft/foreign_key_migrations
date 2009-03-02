@@ -39,7 +39,7 @@ module ActiveRecord
         query << "ON UPDATE #{options[:on_update]} " if options[:on_update]
         query << "ON DELETE #{options[:on_delete]} " if options[:on_delete]
 
-        exec(query)
+        execute(query)
       end
 
       # Attempts to remove a foreign key using ANSI SQL Standard syntax,
