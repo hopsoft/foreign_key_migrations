@@ -1,2 +1,2 @@
 # Include hook code here
-include "foreign_key_migrations"
+require "foreign_key_migrations"
