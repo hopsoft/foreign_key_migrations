@@ -40,6 +40,12 @@ module ActiveRecord
         query << "ON DELETE #{options[:on_delete]} " if options[:on_delete]
 
         execute(query)
+      rescue
+        if respond_to?(:puts_migration_error)
+          puts_migration_error($!)
+        else
+          raise
+        end
       end
 
       # Attempts to remove a foreign key using ANSI SQL Standard syntax,
@@ -68,6 +74,12 @@ module ActiveRecord
         rescue
           query = "ALTER TABLE [#{table_name}] DROP FOREIGN KEY [#{constraint_name}]"
           execute(query)
+        end
+      rescue
+        if respond_to?(:puts_migration_error)
+          puts_migration_error($!)
+        else
+          raise
         end
       end
 
