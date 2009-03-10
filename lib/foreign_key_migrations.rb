@@ -2,8 +2,8 @@ module ActiveRecord
   module ConnectionAdapters
     module SchemaStatements
 
-      # Attempts to add a foreign key using ANSI SQL Standard syntax,
-      # so most database providers should work just fine.
+      # Attempts to add a foreign key using ANSI SQL Standard syntax, so most database
+      #   providers should work just fine.
       #
       # ===Params
       # * table_name - the name of the database table being altered
@@ -21,25 +21,36 @@ module ActiveRecord
           options = o
         end
 
-        query = "ALTER TABLE [#{table_name}] "
-        constraint_name = get_constraint_name(table_name, foreign_key, references, options)
-        query << "ADD CONSTRAINT [#{constraint_name}] "
-        query << "FOREIGN KEY ("
-        if foreign_key.is_a?(Array)
-          query << "[#{foreign_key.join("],[")}] "
-        else
-          query << "[#{foreign_key}] "
+        begin
+          query = "ALTER TABLE #{table_name} "
+          constraint_name = get_constraint_name(table_name, foreign_key, references, options)
+          query << "ADD CONSTRAINT #{constraint_name} "
+          query << "FOREIGN KEY #{constraint_name} ("
+          if foreign_key.is_a?(Array)
+            query << "#{foreign_key.join(",")}"
+          else
+            query << "#{foreign_key}"
+          end
+          query << ") REFERENCES #{references} (id)"
+          query << "ON UPDATE #{options[:on_update]} " if options[:on_update]
+          query << "ON DELETE #{options[:on_delete]} " if options[:on_delete]
+          execute(query)
+        rescue
+          query = "ALTER TABLE #{table_name} "
+          constraint_name = get_constraint_name(table_name, foreign_key, references, options)
+          query << "ADD CONSTRAINT #{constraint_name} "
+          query << "FOREIGN KEY ("
+          if foreign_key.is_a?(Array)
+            query << "#{foreign_key.join(",")}"
+          else
+            query << "#{foreign_key}"
+          end
+          query << ") REFERENCES #{references} (id)"
+          query << "ON UPDATE #{options[:on_update]} " if options[:on_update]
+          query << "ON DELETE #{options[:on_delete]} " if options[:on_delete]
+          execute(query)
         end
-        query << ") REFERENCES "
-        if references.is_a?(Array)
-          query << "[#{references.join("],[")}] "
-        else
-          query << "[#{references}] "
-        end
-        query << "ON UPDATE #{options[:on_update]} " if options[:on_update]
-        query << "ON DELETE #{options[:on_delete]} " if options[:on_delete]
 
-        execute(query)
       rescue
         if respond_to?(:puts_migration_error)
           puts_migration_error($!)
@@ -48,8 +59,8 @@ module ActiveRecord
         end
       end
 
-      # Attempts to remove a foreign key using ANSI SQL Standard syntax,
-      # so most database providers should work just fine.
+      # Attempts to remove a foreign key using ANSI SQL Standard syntax, so most database
+      # providers should work just fine.
       #
       # ===Params
       # * table_name - the name of the database table being altered
@@ -68,11 +79,11 @@ module ActiveRecord
         end
 
         constraint_name = get_constraint_name(table_name, foreign_key, references, options)
-        query = "ALTER TABLE [#{table_name}] DROP CONSTRAINT [#{constraint_name}]"
+        query = "ALTER TABLE #{table_name} DROP CONSTRAINT #{constraint_name}"
         begin
           execute(query)
         rescue
-          query = "ALTER TABLE [#{table_name}] DROP FOREIGN KEY [#{constraint_name}]"
+          query = "ALTER TABLE #{table_name} DROP FOREIGN KEY #{constraint_name}"
           execute(query)
         end
       rescue
